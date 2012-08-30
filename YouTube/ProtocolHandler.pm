@@ -396,7 +396,7 @@ sub getNextTrack {
 				$vars{$k} = $v;
 			}
 
-			my $streams = uri_unescape($vars{fmt_stream_map});
+			my $streams = uri_unescape($vars{fmt_url_map});
 
 			for my $stream (split(/,/, $streams)) {
 				my ($k, $v) = split(/\|/, $stream);

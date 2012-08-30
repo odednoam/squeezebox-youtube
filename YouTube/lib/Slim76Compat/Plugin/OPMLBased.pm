@@ -6,6 +6,8 @@ use strict;
 use base 'Slim::Plugin::OPMLBased';
 
 use Slim::Utils::Prefs;
+use Slim::Utils::Strings qw(string);
+
 use Slim76Compat::Control::XMLBrowser;
 use Slim76Compat::Buttons::XMLBrowser;
 

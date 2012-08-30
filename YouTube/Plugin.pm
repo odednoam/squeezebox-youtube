@@ -258,7 +258,7 @@ sub searchHandler {
 				# Youtube API appears to be limited to 1000, but does not always return 1000 results so restrict to 500
 				my $total = min($json->{'feed'}->{'openSearch$totalResults'}->{'$t'}, $args->{'searchmax'} || 500, 500);
 				
-				$log->debug("current total: " . scalar @$menu);
+				$log->debug("this page: " . scalar @$menu . " total: $total");
 
 				if (scalar @$menu < $quantity && $total > $index + scalar @$menu && scalar @$menu > $before) {
 					

@@ -916,7 +916,7 @@ sub handleFeed {
 			my $furl = _favoritesUrl($item);
 			if ($stash->{'action'} eq 'favadd') {
 
-				my $type = $item->{'type'} || 'link';
+				my $type = $item->{'favorites_type'} || $item->{'type'} || 'link';
 				
 				if ( $item->{'play'} 
 				    || ($type eq 'playlist' && $furl =~ /^(file|db):/)
@@ -982,6 +982,15 @@ sub handleFeed {
 		my $textkey = $item->{'textkey'};
 		if (defined $textkey && $textkey ne $anchor) {
 			$item->{'anchor'} = $anchor = $textkey;
+		}
+	}
+	
+	# Ignore the All Songs link added by browse library at the end if we will add our own link.
+	# This is a horrible hack really.
+	if ($stash->{'items'}) {
+		my $item = $stash->{'items'}->[-1];
+		if ($item && $stash->{'itemsHaveAudio'} && $item->{'name'} && $item->{'name'} eq string('ALL_SONGS')) {
+			$item->{'ignore'} = 1;
 		}
 	}
 	
