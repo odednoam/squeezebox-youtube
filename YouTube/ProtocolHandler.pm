@@ -251,7 +251,7 @@ sub processFLV {
 			
 			if (($firstword & 0xFFFF0000) == 0xAF010000) {      # AAC audio data
 
-				#$log->debug("AAC Audio");
+				$log->debug("AAC Audio");
 				
 				my $header = $v->{'adtsbase'};
 				
@@ -278,7 +278,7 @@ sub processFLV {
 
 			} elsif (($firstword & 0xFFFF0000) == 0xAF000000) { # AAC Config 	
 				
-				#$log->debug("AAC Config");
+				$log->debug("AAC Config");
 				
 				my $profile  = 1; # hard code to 1 rather than ($firstword & 0x0000f800) >> 11;
 				my $sr_index = ($firstword & 0x00000780) >>  7;
@@ -295,7 +295,7 @@ sub processFLV {
 
 			} elsif (($firstword & 0xF0000000) == 0x20000000) { # MP3 Audio
 
-				#$log->debug("MP3 Audio");
+				$log->debug("MP3 Audio");
 
 				$v->{'outBuf'} .= substr($v->{'inBuf'}, 1, $v->{'tagSize'} - 1);
 				$v->{'audioBytes'} += $v->{'tagSize'} - 1;
@@ -395,6 +395,15 @@ sub getNextTrack {
 				my ($k, $v) = $var =~ /(.*)=(.*)/;
 				$vars{$k} = $v;
 			}
+
+            if (!defined $vars{url_encoded_fmt_stream_map}) {
+                # New web page layout uses HTML5 details
+                ($vars{url_encoded_fmt_stream_map}) = ($http->content =~ /\"url_encoded_fmt_stream_map\": \"(.*?)\"/);
+                
+                # Replace known unicode characters
+                $vars{url_encoded_fmt_stream_map} =~ s/\\u0026/\&/g;
+                $log->debug("url_encoded_fmt_stream_map: $vars{url_encoded_fmt_stream_map}");
+            }
 
 			my $streams = uri_unescape($vars{url_encoded_fmt_stream_map});
 
