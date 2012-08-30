@@ -396,12 +396,13 @@ sub getNextTrack {
 				$vars{$k} = $v;
 			}
 
-			my $streams = uri_unescape($vars{fmt_url_map});
+			my $streams = uri_unescape($vars{url_encoded_fmt_stream_map});
 
 			for my $stream (split(/,/, $streams)) {
-				my ($k, $v) = split(/\|/, $stream);
-				$streams{$k} = $v;
-			}
+				if ($stream =~ /^url=(.*)&itag=(.*)/) {
+					$streams{$2} = uri_unescape ($1);
+				}
+ 			}
 
 			# check streams in preferred id order
 			my @streamOrder = $prefs->get('prefer_lowbitrate') ? (5, 34) : (34, 35, 5);
