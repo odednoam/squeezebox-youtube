@@ -167,7 +167,13 @@ sub urlHandler {
 	my ($client, $callback, $args) = @_;
 
 	my $url = 'youtube://' . $args->{'search'};
-
+	
+	#if URL is a full youtube URL, strip the ID part off it. URLs seem to come in with spaces instead of dots
+	(my $x1, my $x2, my $x3, my $x4, my $x5) = ($args->{'search'} =~ /(youtu be\/|youtube com\/(watch\?(.*&)?v=|(embed|v)\/))([^\?&"'>]+)/);
+        if ($x5) {
+                $url = 'youtube://' . $x5;
+        }
+        
 	# use metadata handler to get track info
 	Plugins::YouTube::ProtocolHandler->getMetadataFor(undef, $url, undef, undef, 
 		sub {
